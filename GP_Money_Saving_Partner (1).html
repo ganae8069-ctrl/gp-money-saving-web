@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#11110e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GP Money">
+<title>GP Money Saving Partner</title>
+<style>
+:root { color-scheme:light; --bg:#f5f1e7; --surface:#fffdf8; --surface2:#eee5cf; --text:#211d14; --muted:#756b55; --line:#d8c79d; --green:#9a7421; --green-dark:#765713; --orange:#b95c2a; --red:#b43f42; --gold:#d6a832; --gold-bright:#f2c95d; }
+:root[data-theme="dark"] { color-scheme:dark; --bg:#11110e; --surface:#1b1a14; --surface2:#292519; --text:#f8f0cf; --muted:#bcb28d; --line:#443b22; --green:#f0ce68; --green-dark:#ffe9a0; --orange:#ffb17d; --red:#ff9b9e; --gold:#d6a832; --gold-bright:#f2c95d; }
+:root { --font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; --font-color:var(--text); --heading-color:var(--text); --accent-color:var(--gold); }
+:root[data-font="classic"] { --font-family:Georgia,"Times New Roman",serif; }
+:root[data-font="modern"] { --font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+:root[data-font="rounded"] { --font-family:"Trebuchet MS",Arial,sans-serif; }
+body { font-family:var(--font-family);color:var(--font-color); }
+* { box-sizing:border-box; }
+body { margin:0; font-family:var(--font-family); background:var(--bg); color:var(--font-color); }
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+.app { min-height:100vh; width:100%; background:var(--bg); color:var(--text); }
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:20px clamp(18px,4vw,48px); border-bottom:1px solid var(--line); background:var(--surface); gap:16px; }
+.brand { display:flex; align-items:center; gap:12px; font-weight:800; font-size:20px; letter-spacing:-.6px; }
+.logo { width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,#a87919,#fff0a0 55%,#b88624);color:#19160d;font-family:Georgia,serif;font-size:17px;font-weight:900;letter-spacing:-2px;border:1px solid #f5d778;box-shadow:0 6px 16px #c99b3022; }
+.brand small { display:block;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1.3px;text-transform:uppercase;margin-top:2px; }
+.top-right { display:flex;align-items:center;gap:12px;color:var(--muted);font-size:13px; }
+.pill { border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:var(--surface2);color:var(--text);font-size:12px;font-weight:700; }
+.layout { max-width:1260px;margin:0 auto;padding:28px clamp(16px,3vw,36px) 48px; }
+.welcome { display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px; }
+.eyebrow { text-transform:uppercase;letter-spacing:1.7px;font-size:11px;font-weight:800;color:var(--green);margin-bottom:9px; }
+h1 { margin:0;font-size:clamp(26px,4vw,38px);letter-spacing:-1.4px;line-height:1.12; }
+.subtitle { margin:9px 0 0;color:var(--muted);font-size:14px;line-height:1.5;max-width:650px; }
+.btn { border:0;border-radius:12px;padding:12px 16px;font-weight:750;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,opacity .15s; }
+.btn:hover { transform:translateY(-1px); }
+.btn-primary { background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#21190a;box-shadow:0 5px 14px #b98a2522; }
+.brand,.section-head h2,.feature-section h2,h1,.metric-value,.big-number { color:var(--heading-color); }
+.eyebrow,.good,.budget-name strong { color:var(--accent-color); }
+.btn-ghost { background:var(--surface);border:1px solid var(--line);color:var(--text); }
+.grid { display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px; }
+.card { background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;min-width:0;box-shadow:0 4px 16px #13201605; }
+.metric { grid-column:span 3; }
+.card-label { font-size:12px;color:var(--muted);font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:8px; }
+.metric-value { font-size:clamp(23px,3vw,31px);font-weight:800;letter-spacing:-1px;margin:14px 0 8px; }
+.metric-note { font-size:12px;color:var(--muted);line-height:1.4; }
+.good { color:var(--green); }.warn { color:var(--orange); }.bad { color:var(--red); }
+.icon-bubble { width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--surface2);font-size:17px; }
+.main-card { grid-column:span 7; }
+.side-card { grid-column:span 5; }
+.section-head { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px; }
+.section-head h2 { font-size:16px;letter-spacing:-.3px;margin:0; }
+.section-head p { margin:5px 0 0;font-size:12px;color:var(--muted); }
+.big-number { font-size:30px;font-weight:800;letter-spacing:-1px;margin:8px 0 4px; }
+.progress-track { width:100%;height:9px;background:var(--surface2);border-radius:999px;overflow:hidden;margin:15px 0 10px; }
+.progress-fill { height:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .2s; }
+.progress-row { display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted); }
+.budget-list { display:grid;gap:16px;margin-top:22px; }
+.budget-item { display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;align-items:center; }
+.budget-name { font-size:13px;font-weight:750; }
+.budget-sub { font-size:11px;color:var(--muted);margin-top:4px; }
+.budget-amount { font-size:13px;font-weight:800;text-align:right; }
+.mini-track { height:5px;border-radius:99px;background:var(--surface2);margin-top:8px;overflow:hidden; }
+.mini-fill { height:100%;border-radius:99px;background:var(--green); }
+.callout { background:light-dark(#edf7ef,#1c3425);border:1px solid light-dark(#d2ead7,#315b3d);padding:14px;border-radius:14px;display:flex;gap:10px;margin-top:18px;font-size:12px;line-height:1.5; }
+.callout strong { color:var(--green); }
+.form-grid { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+.field { display:grid;gap:7px; }
+.field label { font-size:12px;color:var(--muted);font-weight:700; }
+.field input,.field select { width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);padding:11px 12px;border-radius:11px;outline:none;min-width:0; }
+.field input:focus,.field select:focus { border-color:var(--green);box-shadow:0 0 0 3px light-dark(#1e754b18,#74d9a018); }
+.form-actions { display:flex;gap:10px;flex-wrap:wrap;margin-top:14px; }
+.target-result { margin-top:15px;border-radius:14px;padding:14px;background:var(--surface2);font-size:13px;line-height:1.55; }
+.target-result strong { color:var(--green); }
+.tx-list { display:grid;gap:0; }
+.tx { display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line); }
+.tx:last-child { border-bottom:0; }
+.tx-icon { width:38px;height:38px;display:grid;place-items:center;background:var(--surface2);border-radius:12px;font-size:17px;flex-shrink:0; }
+.tx-info { flex:1;min-width:0; }
+.tx-title { font-size:13px;font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.tx-date { color:var(--muted);font-size:11px;margin-top:4px; }
+.tx-amount { font-size:13px;font-weight:800;white-space:nowrap; }
+.empty { color:var(--muted);font-size:13px;padding:18px 0;line-height:1.5; }
+.challenge { grid-column:span 5; }
+.history { grid-column:span 7; }
+.challenge-hero { padding:16px;border-radius:16px;background:linear-gradient(135deg,light-dark(#e8f6ec,#203c2b),light-dark(#f6f9f4,#26322a));border:1px solid var(--line);margin-bottom:16px; }
+.challenge-hero .amount { font-size:26px;font-weight:850;letter-spacing:-.8px;margin:8px 0 3px; }
+.challenge-days { display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:16px; }
+.day { aspect-ratio:1;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--muted);font-size:11px;font-weight:700;display:grid;place-items:center; }
+.day.done { background:light-dark(#1e754b,#285f40);border-color:#1e754b;color:#fff; }
+.day.today { outline:2px solid var(--green);outline-offset:1px; }
+.day.future { background:var(--red);border-color:var(--red);color:#fff;cursor:not-allowed;opacity:.82; }
+.day.today { background:#c9f2d3;border-color:#22834f;color:#155c35;outline:2px solid #22834f;outline-offset:1px; }
+.day.today.done { background:#22834f;border-color:#22834f;color:#fff; }
+.manual-calculator { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface2); }
+.manual-calculator h3,.manual-calculator .calculator-result { grid-column:1/-1;margin:0; }
+.calculator-result { font-size:14px;line-height:1.6;padding:12px;border-radius:10px;background:var(--surface); }
+.calculator-launch { margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface2);display:flex;align-items:center;justify-content:space-between;gap:16px; }
+.calculator-launch p { margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.5; }
+.scientific-modal { width:min(360px,100%);max-height:92vh;overflow-y:auto;padding:15px;border-radius:16px; }
+.scientific-modal .close-row { margin-bottom:10px; }
+.scientific-modal .close-row h2 { font-size:17px; }
+.scientific-modal .close-row p { font-size:11px;margin-bottom:0; }
+.scientific-display { width:100%;min-height:48px;padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text);text-align:right;font-size:20px;font-weight:750;overflow-wrap:anywhere;margin-bottom:8px; }
+.scientific-grid { display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px; }
+.scientific-key { min-width:0;min-height:34px;padding:3px;border:1px solid var(--line);border-radius:7px;background:var(--surface2);color:var(--text);font-weight:750;font-size:12px; }
+.scientific-key.operator { background:var(--gold);color:#21190a;border-color:var(--gold); }
+.scientific-key.equals { background:#22834f;color:white;border-color:#22834f; }
+.scientific-key:active { transform:scale(.97); }
+.small-note { color:var(--muted);font-size:11px;line-height:1.5;margin-top:12px; }
+.footer { text-align:center;color:var(--muted);font-size:11px;padding:28px 0 4px; }
+.modal-backdrop { position:fixed;inset:0;background:#0611099c;display:none;align-items:center;justify-content:center;padding:18px;z-index:10; }
+.modal-backdrop.open { display:flex; }
+.modal { width:min(460px,100%);background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 24px 80px #0003; }
+.modal h2 { margin:0 0 5px;font-size:20px; }
+.modal p { color:var(--muted);font-size:13px;margin:0 0 18px; }
+.close-row { display:flex;justify-content:space-between;align-items:start;margin-bottom:18px; }
+.toast { position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(15px);background:var(--text);color:var(--surface);padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:all .2s;z-index:20; }
+.toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
+.auth-screen { min-height:100vh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);background:var(--bg); }
+.auth-story { padding:clamp(28px,6vw,76px);display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(circle at 15% 15%,#8b681d44,transparent 34%),linear-gradient(145deg,#19170f,#242013);color:#fff4cf; }
+.auth-story .brand { color:#fff4cf; }.auth-story .brand small { color:#c6b77d; }.auth-story h1 { max-width:620px;font-size:clamp(34px,5vw,58px);line-height:1.05;letter-spacing:-2px;margin:28px 0 18px; }.auth-story p { max-width:520px;color:#d0c49b;line-height:1.7; }
+.auth-points { display:grid;gap:12px;margin-top:30px;color:#e9dfbd;font-size:14px; }.auth-points span:before { content:'✓';color:#f0ce68;font-weight:900;margin-right:10px; }
+.auth-panel { display:grid;place-items:center;padding:28px; }.auth-card { width:min(440px,100%);background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:clamp(22px,4vw,36px);box-shadow:0 20px 70px #0000000d; }.auth-card h2 { margin:0 0 8px;font-size:27px;letter-spacing:-.8px; }.auth-card .auth-sub { color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 24px; }.auth-tabs { display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;background:var(--surface2);border-radius:13px;margin-bottom:20px; }.auth-tabs button { border:0;border-radius:9px;padding:10px;background:transparent;color:var(--muted);font-weight:750; }.auth-tabs button.active { background:var(--surface);color:var(--text);box-shadow:0 1px 5px #00000010; }.auth-fields { display:grid;gap:14px; }.auth-fields label { display:grid;gap:7px;font-size:12px;font-weight:750;color:var(--muted); }.auth-fields input,.auth-fields select { width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:var(--bg);color:var(--text); }.auth-full { width:100%;margin-top:18px; }.auth-links { display:flex;justify-content:space-between;gap:12px;margin-top:16px;font-size:12px; }.text-button { border:0;background:none;padding:0;color:var(--green);font-weight:750; }.auth-notice { border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:12px;font-size:11px;line-height:1.55;color:var(--muted);margin-top:18px; }.auth-error { min-height:18px;color:var(--red);font-size:12px;margin-top:10px; }.hidden { display:none!important; }.account-actions { display:flex;gap:8px;align-items:center;flex-wrap:wrap; }
+ .feature-nav { display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px; }.feature-nav a { text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-size:12px;font-weight:750; }.feature-nav a:hover,.feature-nav a:focus { border-color:var(--gold);outline-color:var(--gold); }.feature-section { margin-top:18px;scroll-margin-top:18px; }.feature-section h2 { margin:0 0 7px;font-size:20px; }.feature-section .section-intro { margin:0 0 16px;color:var(--muted);font-size:13px;line-height:1.5; }.feature-grid { display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px; }.feature-grid .card { grid-column:span 6; }.plan-options { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px; }.plan-option { border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--bg);display:grid;gap:8px;align-content:start; }.plan-option strong { font-size:15px; }.plan-price { font-size:22px;font-weight:850;color:var(--green); }.plan-option small { color:var(--muted);line-height:1.4; }.chat-log { display:grid;gap:10px;max-height:270px;overflow:auto;margin:12px 0;padding:4px; }.chat-message { max-width:92%;padding:11px 13px;border-radius:14px;background:var(--surface2);font-size:13px;line-height:1.5;white-space:pre-wrap; }.chat-message.user { justify-self:end;background:var(--gold);color:#21190a; }.chat-compose { display:flex;gap:8px; }.chat-compose input { flex:1;min-width:0;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text); }.settings-row { display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line); }.settings-row:last-child { border-bottom:0; }.settings-row p { margin:4px 0 0;font-size:12px;color:var(--muted); }.feature-section select,.feature-section input { max-width:100%; }.support-list { display:grid;gap:10px; }.support-item { padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font-size:13px;line-height:1.5; }.support-item strong { display:block;margin-bottom:4px; }.status-note { font-size:11px;color:var(--muted);line-height:1.5;margin-top:12px; }
+ .feature-nav a.active { background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#21190a;border-color:var(--gold); }
+ .feature-section { display:none;margin-top:0;scroll-margin-top:18px; }
+ .feature-section.active { display:block; }
+@media(max-width:820px) { .auth-screen { grid-template-columns:1fr; }.auth-story { display:none; }.auth-panel { min-height:100vh;padding:18px; }.top-right #monthLabel { display:none; } }
+@media(max-width:900px) { .metric{grid-column:span 6}.main-card,.side-card,.challenge,.history{grid-column:span 12}.welcome{align-items:flex-start;flex-direction:column}.welcome .btn{width:100%} }
+@media(max-width:480px) { .topbar{padding:14px 16px}.top-right .pill{display:none}.layout{padding:22px 14px 34px}.card{padding:16px;border-radius:17px}.metric{grid-column:span 6}.metric-value{font-size:23px}.form-grid{grid-template-columns:1fr}.brand{font-size:18px}.logo{width:38px;height:38px}.section-head{align-items:flex-start}.section-head .btn{padding:9px 10px;font-size:11px} }
+@media(max-width:480px) { .manual-calculator { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<section class="auth-screen" id="authScreen">
+  <aside class="auth-story">
+    <div class="brand"><div class="logo">GP</div><div>GP Money<small>Saving Partner</small></div></div>
+    <div><div class="eyebrow">Your next chapter starts here</div><h1>Make your money work for your future.</h1><p>One simple place to understand spending, plan your EMI, and build a savings habit that lasts.</p><div class="auth-points"><span>Track income, expenses and monthly budgets</span><span>Keep savings goals visible and realistic</span><span>Build better habits one day at a time</span></div></div>
+    <div style="font-size:11px;color:#b9ad83">GP Money Saving Partner · Personal finance planner</div>
+  </aside>
+  <div class="auth-panel"><div class="auth-card">
+    <div class="logo" style="margin-bottom:20px">GP</div><h2 id="authTitle">Welcome back</h2><p class="auth-sub" id="authSubtitle">Sign in to open your money dashboard.</p>
+    <div class="auth-tabs"><button type="button" class="active" id="signInTab">Sign in</button><button type="button" id="createTab">Create account</button></div>
+    <form id="authForm" class="auth-fields" novalidate autocomplete="on">
+      <label id="nameField" class="hidden">Full name<input id="authName" autocomplete="name" maxlength="80" placeholder="Your name"></label>
+      <label>Email address<input id="authEmail" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required></label>
+      <label>Password<input id="authPassword" type="password" autocomplete="current-password" minlength="8" maxlength="128" placeholder="At least 8 characters" required></label>
+      <button class="btn btn-primary auth-full" id="authSubmit" type="submit">Sign in to dashboard</button>
+    </form>
+    <div class="auth-error" id="authError" aria-live="polite"></div>
+    <div class="auth-links"><button type="button" class="text-button" id="forgotPassword">Forgot password?</button><button type="button" class="text-button" id="guestAccess">Try demo</button></div>
+    <button type="button" class="btn btn-ghost auth-full" id="fillDemoCredentials">Fill & sign in to demo</button>
+    <div class="auth-notice"><strong>Demo account:</strong> use the demo email and password supplied by the site owner to sign in. This is a local demo login only, not secure production authentication. Do not reuse this password on other websites.</div>
+  </div></div>
+</section>
+<div class="app" id="appRoot">
+<header class="topbar">
+  <div class="brand"><div class="logo">GP</div><div>GP Money<small>Saving Partner</small></div></div>
+  <div class="top-right"><span id="monthLabel">Monthly overview</span><button class="btn btn-ghost" id="quickThemeToggle" type="button" aria-label="Switch light or dark mode">☼ / ☾ Theme</button><button class="btn btn-ghost" id="installApp" type="button">＋ Add to Home Screen</button><span class="pill">● Local demo</span><button class="btn btn-ghost" id="logoutButton" type="button">Sign out</button></div>
+</header>
+<main class="layout">
+  <section class="welcome">
+    <div><div class="eyebrow">Your money dashboard</div><h1>Small habits. Bigger freedom.</h1><p class="subtitle">A simple plan to control snack spending, stay on top of your EMI, and build your first emergency fund.</p></div>
+    <button class="btn btn-primary" id="addExpenseTop">＋ Add an expense</button>
+  </section>
+  <nav class="feature-nav" aria-label="Dashboard sections"><a class="active" href="#homeGrid" data-view="home">Dashboard</a><a href="#plansSection" data-view="plansSection">Plans & Purchase</a><a href="#assistantSection" data-view="assistantSection">AI Assistant</a><a href="#calculatorSection" data-view="calculatorSection">Calculator</a><a href="#settingsSection" data-view="settingsSection">User Settings</a><a href="#helpSection" data-view="helpSection">Help & Support</a></nav>
+  <section class="grid" id="homeGrid">
+    <article class="card metric"><div class="card-label">Monthly income <span class="icon-bubble">↗</span></div><div class="metric-value" id="incomeMetric">₹25,000</div><div class="metric-note">Edit your income in Monthly plan</div></article>
+    <article class="card metric"><div class="card-label">Spent this month <span class="icon-bubble">↘</span></div><div class="metric-value" id="spentMetric">₹0</div><div class="metric-note" id="spentNote">Log expenses to see your real total</div></article>
+    <article class="card metric"><div class="card-label">Saved this month <span class="icon-bubble">◈</span></div><div class="metric-value good" id="savedMetric">₹0</div><div class="metric-note" id="savedNote">Based on income minus tracked expenses</div></article>
+    <article class="card metric"><div class="card-label">Emergency fund <span class="icon-bubble">✦</span></div><div class="metric-value" id="fundMetric">₹0</div><div class="metric-note">First milestone: ₹5,000</div></article>
+
+    <article class="card main-card">
+      <div class="section-head"><div><h2>Monthly plan</h2><p>Start realistic, then increase savings</p></div><span class="pill">INR ₹</span></div>
+      <div class="form-grid">
+        <div class="field"><label for="incomeInput">Take-home salary (₹)</label><input id="incomeInput" type="number" min="0" step="500" value="25000"></div>
+        <div class="field"><label for="emiInput">Monthly loan EMI (₹)</label><input id="emiInput" type="number" min="0" step="100" value="3000"></div>
+        <div class="field"><label for="essentialInput">Essential costs (₹)</label><input id="essentialInput" type="number" min="0" step="500" value="15000"></div>
+        <div class="field"><label for="targetInput">Savings goal (₹/month)</label><input id="targetInput" type="number" min="0" step="500" value="15000"></div>
+      </div>
+      <div class="form-actions"><button class="btn btn-primary" id="savePlan">Update my plan</button><button class="btn btn-ghost" id="resetDemo">Reset demo data</button></div>
+      <div class="target-result" id="planResult" aria-live="polite"></div>
+      <div class="callout"><span>💡</span><div><strong>Reality check:</strong> Don't force a savings target that makes you borrow for essentials. Build a small emergency cushion first and adjust your target to the actual surplus.</div></div>
+    </article>
+
+    <article class="card side-card">
+      <div class="section-head"><div><h2>Where your money goes</h2><p>Tracked expenses this month</p></div></div>
+      <div class="budget-list" id="categoryList"></div>
+      <div class="small-note">Add each purchase to make these numbers useful. Categories are estimated from the expenses you enter.</div>
+    </article>
+
+    <article class="card main-card"><div class="section-head"><div><h2>Spending chart</h2><p>Live breakdown of this month's recorded expenses</p></div><span class="pill" id="chartMonthLabel">This month</span></div><div style="height:230px;position:relative;width:100%"><canvas id="spendingChart" role="img" aria-label="Monthly spending chart" style="width:100%;height:100%;display:block"></canvas></div><div class="small-note" id="chartStatus" aria-live="polite">Chart updates when expenses are added or removed.</div></article>
+
+    <article class="card challenge">
+      <div class="section-head"><div><h2>Snack spending challenge</h2><p>Stop impulse buys without banning treats</p></div><span class="pill">30 days</span></div>
+      <div class="challenge-hero" id="dailyAttendancePanel">
+        <div class="card-label">Daily check-in <span>📅</span></div>
+        <div class="amount" id="attendanceStatus">Checking today…</div>
+        <div class="metric-note" id="attendanceMessage">Your login is recorded automatically when this dashboard opens.</div>
+        <div class="progress-row" style="margin-top:10px"><span id="attendanceDate"></span><span id="attendanceCount">0 active days</span></div>
+      </div>
+      <div class="section-head"><div><h2>Today's spending status</h2><p>Record a purchase or confirm no spending today</p></div></div>
+      <div class="form-actions"><button class="btn btn-primary" id="noSpendingToday" type="button">✓ No spending today</button><button class="btn btn-ghost" id="undoNoSpending" type="button">Undo status</button></div>
+      <div class="small-note" id="dailySpendingStatus" aria-live="polite">If you add an expense dated today, spending will be marked automatically.</div>
+      <div class="challenge-hero">
+        <div class="card-label">Daily snack + cool drink limit <span>🥤</span></div>
+        <div class="amount" id="snackAmount">₹50 / day</div>
+        <div class="metric-note" id="snackStatus">Log snack expenses to track today's limit.</div>
+        <div class="progress-track"><div class="progress-fill" id="snackProgress" style="width:0%"></div></div>
+        <div class="progress-row"><span id="snackSpent">₹0 spent today</span><span id="snackRemaining">₹50 left</span></div>
+      </div>
+      <div class="section-head"><div><h2>30-day consistency</h2><p>Today updates automatically. Past and future dates cannot be marked here.</p></div></div>
+      <div class="challenge-days" id="challengeDays"></div>
+      <div class="small-note" id="challengeMessage">Today's square turns green after you record spending or confirm no spending. Other dates are locked.</div>
+    </article>
+
+    <article class="card history">
+      <div class="section-head"><div><h2>Recent expenses</h2><p>Your latest money leaks, made visible</p></div><button class="btn btn-ghost" id="addExpenseHistory">＋ Add</button></div>
+      <div class="tx-list" id="transactionList"></div>
+      <div class="small-note">This prototype stores entries in this browser on this device only. It does not connect to your bank or send financial data to a server.</div>
+    </article>
+  </section>
+  <section class="feature-section" id="plansSection"><h2>Plans & Purchase</h2><p class="section-intro">Choose a plan to preview its benefits. This prototype does not process payments or activate subscriptions.</p><div class="card"><div class="plan-options"><div class="plan-option"><strong>1 Month</strong><div class="plan-price">₹49</div><small>Standard · monthly access</small><button class="btn btn-primary choose-plan" data-plan="Standard monthly · ₹49">Choose plan</button></div><div class="plan-option"><strong>3 Months</strong><div class="plan-price">₹149</div><small>Standard · save more</small><button class="btn btn-primary choose-plan" data-plan="Standard 3 months · ₹149">Choose plan</button></div><div class="plan-option"><strong>6 Months</strong><div class="plan-price">₹299</div><small>Standard · long-term</small><button class="btn btn-primary choose-plan" data-plan="Standard 6 months · ₹299">Choose plan</button></div><div class="plan-option"><strong>12 Months</strong><div class="plan-price">₹599</div><small>Standard · best annual value</small><button class="btn btn-primary choose-plan" data-plan="Standard 12 months · ₹599">Choose plan</button></div></div><div class="callout"><span>✦</span><div><strong>GP Pro · ₹99/month</strong><br>Conceptual upgrade for advanced financial analysis, loan projections, long-term goal planning and advanced reports. Payments, trials and subscription entitlements require a secure billing backend.</div></div><p class="status-note" id="planStatus" aria-live="polite">No plan selected. Selecting a plan here only displays a demo confirmation.</p></div></section>
+  <section class="feature-section" id="assistantSection"><h2>AI & Voice Assistant</h2><p class="section-intro">Try the local demo assistant for budgeting prompts. It is not connected to a live AI service or your bank.</p><div class="feature-grid"><article class="card"><div class="section-head"><div><h2>GP Finance Assistant</h2><p>Ask about budgeting, expenses or saving goals</p></div><span class="pill">Local assistant</span></div><div class="chat-log" id="chatLog" aria-live="polite"><div class="chat-message">Hello! I can help you think through a budget. Try asking “How can I save more?” or “Explain my spending”.</div></div><form class="chat-compose" id="chatForm"><input id="chatInput" maxlength="500" placeholder="Ask a money question…" aria-label="Ask the finance assistant" required><button class="btn btn-primary" type="submit">Send</button></form><p class="status-note">Answers are generated locally from rules and your on-device budget data. A live AI model requires a secure backend connection.</p></article><article class="card"><div class="section-head"><div><h2>Voice Assistant</h2><p>Speak a question and hear a response when supported</p></div><span class="icon-bubble">🎙️</span></div><div class="field"><label for="voiceLanguage">Voice language</label><select id="voiceLanguage"><option value="en-IN">English (India)</option><option value="ta-IN">Tamil</option><option value="hi-IN">Hindi</option><option value="fr-FR">French</option><option value="es-ES">Spanish</option></select></div><label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;color:var(--muted)"><input id="voiceAutoSpeak" type="checkbox" style="width:auto"> Read chat answers aloud</label><div class="form-actions"><button class="btn btn-primary" id="startVoice" type="button">🎙 Start speaking</button><button class="btn btn-ghost" id="speakHelp" type="button">Read a sample aloud</button></div><div class="target-result" id="voiceStatus" aria-live="polite">Voice features depend on browser support and microphone permission.</div><p class="status-note">Speech recognition requires browser support and microphone permission. Speech output works where the device provides speech synthesis.</p></article></div></section>
+  <section class="feature-section" id="settingsSection"><h2>User Settings</h2><p class="section-intro">Personalize this browser-based demo. Settings are stored locally on this device.</p><div class="feature-grid"><article class="card"><h2>Appearance & language</h2><div class="settings-row"><div><strong>Colour appearance</strong><p>Switch between classic black-and-gold dark mode and light mode.</p></div><select id="themeSelect" aria-label="Choose appearance"><option value="dark">Dark · Black & Gold</option><option value="light">Light · Gold accents</option></select></div><div class="settings-row"><div><strong>Font style</strong><p>Choose a typeface for the dashboard.</p></div><select id="fontSelect" aria-label="Choose font"><option value="modern">Modern sans-serif</option><option value="classic">Classic serif</option><option value="rounded">Rounded</option></select></div><div class="settings-row"><div><strong>Text colour</strong><p>Choose a dashboard text colour.</p></div><input id="fontColorSelect" type="color" value="#f8f0cf" aria-label="Choose text colour" style="width:54px;height:38px;padding:3px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"></div><div class="settings-row"><div><strong>Accent colour</strong><p>Change highlight and emphasis colour.</p></div><input id="accentColorSelect" type="color" value="#d6a832" aria-label="Choose accent colour" style="width:54px;height:38px;padding:3px;border:1px solid var(--line);border-radius:8px;background:var(--surface)"></div><div class="settings-row"><div><strong>Interface language</strong><p>Choose a supported sample interface language.</p></div><select id="languageSelect" aria-label="Choose language"><option value="en">English</option><option value="ta">தமிழ்</option><option value="hi">हिन्दी</option><option value="fr">Français</option><option value="es">Español</option></select></div><div class="settings-row"><div><strong>Profile</strong><p id="profileStatus">Demo profile on this device</p></div><button class="btn btn-ghost" id="editProfile" type="button">View profile</button></div><div class="form-actions"><button class="btn btn-ghost" id="resetAppearance" type="button">Reset appearance</button></div></article><article class="card"><h2>Privacy & account</h2><div class="settings-row"><div><strong>Local data</strong><p>Expenses and budget values are saved in this browser.</p></div><button class="btn btn-ghost" id="privacyInfo" type="button">Details</button></div><div class="settings-row"><div><strong>Security</strong><p>Real authentication, password reset and cloud sync are not configured.</p></div><span class="pill">Demo only</span></div><div class="settings-row"><div><strong>Notifications</strong><p>No background reminders are sent by this offline prototype.</p></div><span class="pill">Not connected</span></div></article></div></section>
+  <section class="feature-section" id="helpSection"><h2>Help & Support</h2><p class="section-intro">Guidance for using GP Money Saving Partner.</p><div class="feature-grid"><article class="card"><h2>Quick guide</h2><div class="support-list"><div class="support-item"><strong>1. Set your monthly plan</strong>Enter take-home income, EMI, essential costs and a realistic savings target.</div><div class="support-item"><strong>2. Record expenses</strong>Use Add an expense and select its category and date. Review totals on the home dashboard.</div><div class="support-item"><strong>3. Track your habit</strong>Use the snack challenge as a gentle guide, not a punishment.</div></div></article><article class="card"><h2>Frequently asked questions</h2><div class="support-list"><div class="support-item"><strong>Does this connect to my bank?</strong>No. This HTML demo does not connect to banks or financial accounts.</div><div class="support-item"><strong>Are purchases real?</strong>No. Plan buttons are previews only; no payment is collected.</div><div class="support-item"><strong>How do I get help?</strong>For this prototype, use the on-page guide. A real support inbox and secure account service must be configured before launch.</div></div></article></div></section>
+  <section class="feature-section" id="calculatorSection"><h2>Manual Calculation & Scientific Calculator</h2><p class="section-intro">Separate tools for historical budget calculations and scientific arithmetic. These calculations never alter your daily attendance calendar.</p><div class="feature-grid"><article class="card"><h2>Past month calculation</h2><p class="section-intro">Enter historical values to calculate the remaining balance for a selected month.</p><div class="manual-calculator" style="margin-top:0"><div class="field"><label for="calcMonth">Month to calculate</label><input id="calcMonth" type="month"></div><div class="field"><label for="calcIncome">Monthly income (₹)</label><input id="calcIncome" type="number" min="0" step="1" value="25000"></div><div class="field"><label for="calcSpent">Total spent that month (₹)</label><input id="calcSpent" type="number" min="0" step="1" value="0"></div><div class="field"><label for="calcSavings">Other savings (₹)</label><input id="calcSavings" type="number" min="0" step="1" value="0"></div><button class="btn btn-primary" id="calculatePastMonth" type="button" style="grid-column:1/-1">Calculate past month</button><div class="calculator-result" id="pastMonthResult" aria-live="polite">Enter historical values and calculate your past month balance.</div></div></article><article class="card"><h2>Scientific calculator</h2><p class="section-intro">Open a full calculator with trigonometry, logarithms, powers, roots, constants, parentheses and memory.</p><button class="btn btn-primary" id="openScientificCalculator" type="button">⌗ Open scientific calculator</button><div class="status-note">Supports DEG/RAD mode, sin, cos, tan, inverse trig, ln, log, square root, factorial, powers, π and e.</div></article></div></section>
+  <div class="footer">GP Money Saving Partner · A personal budgeting prototype · Not a bank or investment service</div>
+</main>
+</div>
+
+<div class="modal-backdrop" id="expenseModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="close-row"><div><h2 id="modalTitle">Add an expense</h2><p>Every rupee counts. Log it honestly.</p></div><button class="btn btn-ghost" id="closeModal" aria-label="Close">✕</button></div>
+    <form id="expenseForm">
+      <div class="form-grid">
+        <div class="field" style="grid-column:1/-1"><label for="expenseTitle">What did you spend on?</label><input id="expenseTitle" maxlength="60" placeholder="e.g. Cool drink, tea, bus fare" required></div>
+        <div class="field"><label for="expenseAmount">Amount (₹)</label><input id="expenseAmount" type="number" min="1" max="1000000" step="1" placeholder="50" required></div>
+        <div class="field"><label for="expenseCategory">Category</label><select id="expenseCategory"><option value="Snacks & drinks">Snacks & drinks</option><option value="Food">Food</option><option value="Transport">Transport</option><option value="Bills">Bills</option><option value="Shopping">Shopping</option><option value="Family">Family</option><option value="Other">Other</option></select></div>
+        <div class="field" style="grid-column:1/-1"><label for="expenseDate">Date</label><input id="expenseDate" type="date" required></div>
+      </div>
+      <div class="form-actions"><button class="btn btn-primary" type="submit">Save expense</button><button class="btn btn-ghost" type="button" id="cancelModal">Cancel</button></div>
+    </form>
+  </div>
+</div>
+<div class="modal-backdrop" id="scientificCalculatorModal" role="dialog" aria-modal="true" aria-labelledby="scientificCalculatorTitle">
+  <div class="modal scientific-modal"><div class="close-row"><div><h2 id="scientificCalculatorTitle">Scientific calculator</h2><p>Use the keypad or your keyboard. No budget records are changed.</p></div><button class="btn btn-ghost" id="closeScientificCalculator" type="button" aria-label="Close calculator">✕</button></div><div class="field" style="margin-bottom:10px"><label for="angleMode">Angle mode</label><select id="angleMode"><option value="DEG">Degrees (DEG)</option><option value="RAD">Radians (RAD)</option></select></div><div class="scientific-display" id="scientificDisplay" role="status" aria-live="polite">0</div><div class="scientific-grid" id="scientificKeypad"><button class="scientific-key" data-action="clear">AC</button><button class="scientific-key" data-action="backspace">⌫</button><button class="scientific-key" data-value="(">(</button><button class="scientific-key" data-value=")">)</button><button class="scientific-key operator" data-value="/">÷</button><button class="scientific-key" data-value="sin(">sin</button><button class="scientific-key" data-value="cos(">cos</button><button class="scientific-key" data-value="tan(">tan</button><button class="scientific-key" data-value="sqrt(">√</button><button class="scientific-key operator" data-value="*">×</button><button class="scientific-key" data-value="asin(">sin⁻¹</button><button class="scientific-key" data-value="acos(">cos⁻¹</button><button class="scientific-key" data-value="atan(">tan⁻¹</button><button class="scientific-key" data-value="^2">x²</button><button class="scientific-key operator" data-value="-">−</button><button class="scientific-key" data-value="log(">log</button><button class="scientific-key" data-value="ln(">ln</button><button class="scientific-key" data-value="!">x!</button><button class="scientific-key" data-value="^">xʸ</button><button class="scientific-key operator" data-value="+">+</button><button class="scientific-key" data-value="7">7</button><button class="scientific-key" data-value="8">8</button><button class="scientific-key" data-value="9">9</button><button class="scientific-key" data-value="%">%</button><button class="scientific-key" data-value="pi">π</button><button class="scientific-key" data-value="4">4</button><button class="scientific-key" data-value="5">5</button><button class="scientific-key" data-value="6">6</button><button class="scientific-key" data-value="e">e</button><button class="scientific-key" data-action="memory-add">M+</button><button class="scientific-key" data-value="1">1</button><button class="scientific-key" data-value="2">2</button><button class="scientific-key" data-value="3">3</button><button class="scientific-key" data-value="/100">÷100</button><button class="scientific-key" data-action="memory-recall">MR</button><button class="scientific-key" data-value="0">0</button><button class="scientific-key" data-value=".">.</button><button class="scientific-key" data-action="sign">±</button><button class="scientific-key" data-action="memory-clear">MC</button><button class="scientific-key equals" data-action="equals">=</button></div><div class="status-note" id="scientificStatus" aria-live="polite">Ready. Use parentheses for complex expressions.</div></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  const STORAGE_KEY = "paisapath_v1";
+  const DEMO_SESSION_KEY = "gp_money_demo_session_v1";
+  const authScreen = document.getElementById("authScreen");
+  const appRoot = document.getElementById("appRoot");
+  const authForm = document.getElementById("authForm");
+  const authName = document.getElementById("authName");
+  const authEmail = document.getElementById("authEmail");
+  const authPassword = document.getElementById("authPassword");
+  const DEMO_EMAIL = "ganae8069@gmail.com";
+  const DEMO_PASSWORD = "GANA12345";
+  const authError = document.getElementById("authError");
+  let authMode = "signin";
+  function setAuthMode(mode){
+    authMode=mode; const creating=mode==="create";
+    document.getElementById("signInTab").classList.toggle("active",!creating);
+    document.getElementById("createTab").classList.toggle("active",creating);
+    document.getElementById("nameField").classList.toggle("hidden",!creating);
+    document.getElementById("authTitle").textContent=creating?"Create your account":"Welcome back";
+    document.getElementById("authSubtitle").textContent=creating?"Set up a demo profile to explore your dashboard.":"Sign in to open your money dashboard.";
+    document.getElementById("authSubmit").textContent=creating?"Create demo account":"Sign in to dashboard";
+    authPassword.autocomplete=creating?"new-password":"current-password";authError.textContent="";
+  }
+  function showDashboard(){authScreen.classList.add("hidden");appRoot.classList.remove("hidden");}
+  function showLogin(){appRoot.classList.add("hidden");authScreen.classList.remove("hidden");}
+  document.getElementById("signInTab").addEventListener("click",()=>setAuthMode("signin"));
+  document.getElementById("createTab").addEventListener("click",()=>setAuthMode("create"));
+  document.getElementById("fillDemoCredentials").addEventListener("click",()=>{setAuthMode("signin");authEmail.value=DEMO_EMAIL;authPassword.value=DEMO_PASSWORD;authError.textContent="Checking demo credentials…";authForm.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}));});
+  document.getElementById("guestAccess").addEventListener("click",()=>{try{sessionStorage.setItem(DEMO_SESSION_KEY,"demo");}catch(e){}showDashboard();});
+  document.getElementById("forgotPassword").addEventListener("click",()=>{authError.textContent="Password reset is not connected in this offline prototype. A live version needs verified email and secure reset links.";});
+  document.getElementById("logoutButton").addEventListener("click",()=>{try{sessionStorage.removeItem(DEMO_SESSION_KEY);}catch(e){}showLogin();setAuthMode("signin");authPassword.value="";});
+  authForm.addEventListener("submit",event=>{
+    event.preventDefault();event.stopPropagation();
+    const email=String(authEmail.value||"").trim();const password=String(authPassword.value||"");
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){authError.textContent="Enter a valid email address, for example name@example.com.";authEmail.focus();return;}
+    if(authMode==="signin"&&(email.toLowerCase()!==DEMO_EMAIL||password!==DEMO_PASSWORD)){authError.textContent="Email or password is incorrect. Use the demo credentials provided by the site owner.";authPassword.focus();return;}
+    if(authMode==="create"&&email.toLowerCase()===DEMO_EMAIL){authError.textContent="This email is reserved for the demo login. Please use Sign in.";authEmail.focus();return;}
+    if(password.length<8){authError.textContent="Enter a password with at least 8 characters.";authPassword.focus();return;}
+    if(authMode==="create"&&!String(authName.value||"").trim()){authError.textContent="Enter your name to create a demo account.";authName.focus();return;}
+    try{sessionStorage.setItem(DEMO_SESSION_KEY,JSON.stringify({email,name:String(authName.value||"").trim(),mode:authMode,authenticated:authMode==="signin"&&email.toLowerCase()===DEMO_EMAIL}));}catch(e){}
+    authPassword.value="";authError.textContent="";showDashboard();
+    const toastEl=document.getElementById("toast");if(toastEl){toastEl.textContent="Demo session started — local prototype only";toastEl.classList.add("show");setTimeout(()=>toastEl.classList.remove("show"),2400);}
+  });
+  try{if(sessionStorage.getItem(DEMO_SESSION_KEY)){showDashboard();}else{showLogin();}}catch(e){showLogin();}
+  let deferredInstallPrompt = null;
+  const installButton = document.getElementById("installApp");
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    installButton.textContent = "＋ Install app";
+  });
+  installButton.addEventListener("click", async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      return;
+    }
+    alert("Add GP Money Saving Partner to your home screen:\n\nAndroid (Chrome): open ⋮ menu, then choose ‘Install app’ or ‘Add to Home screen’.\niPhone/iPad (Safari): tap Share, then ‘Add to Home Screen’.\nComputer: check your browser menu for ‘Install page as app’ or ‘Create shortcut’.\n\nIf no install option appears, the site may need to be published over HTTPS with app-install files enabled.");
+  });
+  const today = new Date();
+  const isoToday = localISO(today);
+  const defaultState = {
+    income:25000, emi:3000, essentials:15000, target:15000, fund:0, snackLimit:50,
+    expenses:[], challenge:{}, attendance:{}, dailySpending:{}
+  };
+  let state = loadState();
+  function localISO(d){const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,10);}
+  function loadState(){
+    try { const raw=localStorage.getItem(STORAGE_KEY); if(raw){const s=JSON.parse(raw);return {...defaultState,...s,challenge:s.challenge||{},attendance:s.attendance||{},dailySpending:s.dailySpending||{},expenses:Array.isArray(s.expenses)?s.expenses:[]};} } catch(e){}
+    return structuredClone(defaultState);
+  }
+  function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+  function money(n){return new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0}).format(Math.round(n||0));}
+  function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+  function monthKey(d=isoToday){return d.slice(0,7);}
+  function monthExpenses(){return state.expenses.filter(e=>e.date.slice(0,7)===monthKey());}
+  function total(arr){return arr.reduce((a,e)=>a+Number(e.amount||0),0);}
+  function snackToday(){return total(state.expenses.filter(e=>e.date===isoToday&&e.category==="Snacks & drinks"));}
+  function recordLoginAttendance(){state.attendance=state.attendance||{};state.attendance[isoToday]=state.attendance[isoToday]||{firstLogin:new Date().toISOString()};persist();}
+  function updateDailySpendingStatus(){
+    state.dailySpending=state.dailySpending||{};
+    const todaysExpenses=state.expenses.filter(e=>e.date===isoToday);
+    if(todaysExpenses.length){state.dailySpending[isoToday]={status:"spent",updatedAt:new Date().toISOString()};}
+    const status=state.dailySpending[isoToday]?.status;
+    const button=document.getElementById("noSpendingToday");
+    button.disabled=todaysExpenses.length>0;
+    button.textContent=todaysExpenses.length?"Spending recorded today":"✓ No spending today";
+    document.getElementById("dailySpendingStatus").textContent=todaysExpenses.length
+      ?"Spending recorded automatically: "+todaysExpenses.length+" expense"+(todaysExpenses.length===1?"":"s")+" logged today."
+      :status==="no-spending"?"You confirmed no spending today. If you buy anything later, add it and this status will update automatically."
+      :"No expense is logged yet. Confirm ‘No spending today’ if you made no purchases.";
+    const todayMarked=!!state.challenge?.[isoToday];
+    const attendancePanel=document.getElementById("dailyAttendancePanel");
+    attendancePanel.style.background=todayMarked?"linear-gradient(135deg,#c9f2d3,#e6f8eb)":"";
+    attendancePanel.style.borderColor=todayMarked?"#22834f":"";
+    document.getElementById("attendanceStatus").textContent=todayMarked?"Today updated ✓":"Today not updated";
+    document.getElementById("attendanceMessage").textContent=todayMarked?"Today's status is recorded for "+isoToday+".":"Log today's expense or confirm no spending, then mark today's challenge successful.";
+    document.getElementById("challengeMessage").textContent=todayMarked?"Today's record is saved. Other dates are locked.":"Only today's date can be updated. Record an expense or confirm no spending, then mark today's challenge successful.";
+  }
+  function categoryIcon(c){return {"Snacks & drinks":"🥤","Food":"🍲","Transport":"🚌","Bills":"🧾","Shopping":"🛍️","Family":"🏠","Other":"•"}[c]||"•";}
+  function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),2400);}
+  function render(){
+    document.getElementById("monthLabel").textContent=new Date().toLocaleDateString("en-IN",{month:"long",year:"numeric"});
+    document.getElementById("incomeInput").value=state.income;
+    document.getElementById("emiInput").value=state.emi;
+    document.getElementById("essentialInput").value=state.essentials;
+    document.getElementById("targetInput").value=state.target;
+    const exp=monthExpenses(), spent=total(exp), available=state.income-state.emi-state.essentials;
+    document.getElementById("incomeMetric").textContent=money(state.income);
+    document.getElementById("spentMetric").textContent=money(spent);
+    document.getElementById("spentNote").textContent=spent>state.income-state.emi?"Tracked spending is above your income after EMI":"Based on expenses you have logged";
+    document.getElementById("savedMetric").textContent=money(Math.max(0,available-spent));
+    document.getElementById("savedNote").textContent=available-spent<0?"Budget is over plan — review costs":"Estimated leftover after plan and tracked spending";
+    document.getElementById("fundMetric").textContent=money(state.fund);
+    document.getElementById("attendanceStatus").textContent=state.attendance?.[isoToday]?"Login successful":"Login not recorded";
+    document.getElementById("attendanceDate").textContent=new Date(isoToday+"T12:00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+    document.getElementById("attendanceCount").textContent=Object.keys(state.attendance||{}).length+" active days";
+    document.getElementById("attendanceMessage").textContent="Automatically recorded on first dashboard visit today. No manual attendance button needed.";
+    updateDailySpendingStatus();
+    const result=document.getElementById("planResult");
+    if(available<0){result.innerHTML=`Your plan is short by <strong>${money(Math.abs(available))}</strong> before snacks or other unplanned purchases. Lower the target, reduce costs where possible, or focus on increasing income.`;}
+    else if(state.target>available){result.innerHTML=`Your current planned surplus is <strong>${money(available)}</strong> before unplanned spending. A ${money(state.target)} savings goal is not yet affordable; start with a smaller amount and increase it when income rises or costs fall.`;}
+    else {result.innerHTML=`Your planned surplus is <strong>${money(available)}</strong> before unplanned spending. Your target fits on paper; keep an allowance for irregular expenses.`;}
+    const cats={};exp.forEach(e=>cats[e.category]=(cats[e.category]||0)+Number(e.amount));
+    const catRoot=document.getElementById("categoryList");
+    const allCats=["Snacks & drinks","Food","Transport","Bills","Shopping","Family","Other"];
+    catRoot.innerHTML=allCats.map(c=>{const n=cats[c]||0,p=spent?Math.min(100,n/spent*100):0;return `<div class="budget-item"><div class="icon-bubble">${categoryIcon(c)}</div><div><div class="budget-name">${escapeHTML(c)}</div><div class="mini-track"><div class="mini-fill" style="width:${p}%"></div></div></div><div class="budget-amount">${money(n)}<div class="budget-sub">${Math.round(p)}%</div></div></div>`;}).join("");
+    const todaySpend=snackToday(),remaining=Math.max(0,state.snackLimit-todaySpend);
+    document.getElementById("snackAmount").textContent=money(state.snackLimit)+" / day";
+    document.getElementById("snackSpent").textContent=money(todaySpend)+" spent today";
+    document.getElementById("snackRemaining").textContent=money(remaining)+" left";
+    document.getElementById("snackProgress").style.width=Math.min(100,todaySpend/Math.max(1,state.snackLimit)*100)+"%";
+    document.getElementById("snackProgress").style.background=todaySpend>state.snackLimit?"#b95c2a":"#1e754b";
+    document.getElementById("snackStatus").textContent=todaySpend>state.snackLimit?"Over today's limit by "+money(todaySpend-state.snackLimit)+". Reset tomorrow.": "You've used "+Math.round(todaySpend/Math.max(1,state.snackLimit)*100)+"% of today's limit.";
+    const days=document.getElementById("challengeDays");
+    const dates=Array.from({length:30},(_,i)=>{const d=new Date();d.setDate(d.getDate()-29+i);return localISO(d);});
+    days.innerHTML=dates.map(date=>{const future=date>isoToday,isToday=date===isoToday,done=!!state.challenge[date];return `<button class="day ${future?"future":""} ${done?"done":""} ${isToday?"today":""}" data-date="${date}" title="${date}" aria-label="${date}${future?", future date locked":isToday?", today":", past date locked"}" ${!isToday?"disabled":""}>${done?"✓":new Date(date+"T12:00:00").getDate()}</button>`;}).join("");
+    days.querySelectorAll(".day").forEach(b=>b.addEventListener("click",()=>{const d=b.dataset.date;if(d!==isoToday){toast("Only today's date can be updated.");return;}if(!state.challenge[isoToday]){const hasExpense=state.expenses.some(e=>e.date===isoToday);const confirmedNoSpend=state.dailySpending?.[isoToday]?.status==="no-spending";if(!hasExpense&&!confirmedNoSpend){toast("Record today's spending or confirm no spending first.");return;}}state.challenge[isoToday]=!state.challenge[isoToday];persist();render();toast(state.challenge[isoToday]?"Today's record updated":"Today's mark removed");}));
+    const txRoot=document.getElementById("transactionList");
+    const recent=[...state.expenses].sort((a,b)=>(b.date+b.id).localeCompare(a.date+a.id)).slice(0,7);
+    txRoot.innerHTML=recent.length?recent.map(e=>`<div class="tx"><div class="tx-icon">${categoryIcon(e.category)}</div><div class="tx-info"><div class="tx-title">${escapeHTML(e.title)}</div><div class="tx-date">${escapeHTML(e.category)} · ${new Date(e.date+"T12:00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short"})}</div></div><div class="tx-amount">−${money(e.amount)}</div><button class="btn btn-ghost delete-tx" data-id="${e.id}" style="padding:7px 9px" aria-label="Delete expense">×</button></div>`).join(""):`<div class="empty">No expenses logged yet. Start with today's tea, snack or travel expense to make your budget accurate.</div>`;
+    txRoot.querySelectorAll(".delete-tx").forEach(b=>b.addEventListener("click",()=>{state.expenses=state.expenses.filter(e=>e.id!==b.dataset.id);persist();render();toast("Expense removed");}));
+    drawSpendingChart(exp);
+  }
+  function drawSpendingChart(exp){
+    const canvas=document.getElementById("spendingChart");if(!canvas)return;const ctx=canvas.getContext("2d");if(!ctx)return;
+    const rect=canvas.getBoundingClientRect(),ratio=window.devicePixelRatio||1,w=Math.max(280,Math.floor(rect.width)),h=Math.max(180,Math.floor(rect.height));canvas.width=w*ratio;canvas.height=h*ratio;ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,w,h);
+    const styles=getComputedStyle(document.documentElement),textColor=styles.getPropertyValue("--muted").trim()||"#756b55",gold=styles.getPropertyValue("--gold").trim()||"#d6a832",line=styles.getPropertyValue("--line").trim()||"#d8c79d";
+    const categories={};exp.forEach(item=>categories[item.category]=(categories[item.category]||0)+Number(item.amount||0));const items=Object.entries(categories).sort((a,b)=>b[1]-a[1]);
+    document.getElementById("chartMonthLabel").textContent=new Date().toLocaleDateString("en-IN",{month:"short",year:"numeric"});
+    if(!items.length){ctx.fillStyle=textColor;ctx.font="13px sans-serif";ctx.textAlign="center";ctx.fillText("Add an expense to see your chart",w/2,h/2);document.getElementById("chartStatus").textContent="No expenses recorded for this month yet.";return;}
+    const shown=items.slice(0,6),max=Math.max(...shown.map(x=>x[1]),1),left=92,right=18,top=12,rowH=Math.min(34,(h-24)/shown.length),barW=Math.max(40,w-left-right-48);
+    ctx.font="11px sans-serif";ctx.textBaseline="middle";shown.forEach(([name,value],i)=>{const y=top+i*rowH;ctx.textAlign="right";ctx.fillStyle=textColor;let label=name.length>13?name.slice(0,12)+"…":name;ctx.fillText(label,left-10,y+9);ctx.fillStyle=line;ctx.fillRect(left,y,barW,13);ctx.fillStyle=gold;ctx.fillRect(left,y,Math.max(2,barW*value/max),13);ctx.textAlign="left";ctx.fillStyle=textColor;const amount=new Intl.NumberFormat("en-IN",{maximumFractionDigits:0}).format(value);ctx.fillText("₹"+amount,Math.min(w-right-35,left+barW*value/max+5),y+7);});
+    document.getElementById("chartStatus").textContent="Showing "+items.length+" expense categor"+(items.length===1?"y":"ies")+" · Total this month: "+money(total(exp))+". Updated automatically.";
+  }
+  window.addEventListener("resize",()=>drawSpendingChart(monthExpenses()));
+  const modal=document.getElementById("expenseModal");
+  function openModal(){document.getElementById("expenseDate").value=isoToday;modal.classList.add("open");document.getElementById("expenseTitle").focus();}
+  function closeModal(){modal.classList.remove("open");}
+  document.getElementById("addExpenseTop").addEventListener("click",openModal);
+  document.getElementById("addExpenseHistory").addEventListener("click",openModal);
+  document.getElementById("closeModal").addEventListener("click",closeModal);
+  document.getElementById("cancelModal").addEventListener("click",closeModal);
+  modal.addEventListener("click",e=>{if(e.target===modal)closeModal();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+  document.getElementById("expenseForm").addEventListener("submit",e=>{
+    e.preventDefault();
+    const title=document.getElementById("expenseTitle").value.trim(),amount=Number(document.getElementById("expenseAmount").value),category=document.getElementById("expenseCategory").value,date=document.getElementById("expenseDate").value;
+    if(!title||!Number.isFinite(amount)||amount<=0||!date){toast("Please enter a valid expense");return;}
+    state.expenses.push({id:String(Date.now())+Math.random().toString(16).slice(2,6),title,amount,category,date});
+    if(date===isoToday){state.dailySpending=state.dailySpending||{};state.dailySpending[isoToday]={status:"spent",updatedAt:new Date().toISOString()};if(snackToday()+ (category==="Snacks & drinks"?amount:0)<=state.snackLimit)state.challenge[isoToday]=true;}
+    persist();e.target.reset();closeModal();render();toast("Expense saved on this device");
+  });
+  document.getElementById("savePlan").addEventListener("click",()=>{
+    const income=Number(document.getElementById("incomeInput").value),emi=Number(document.getElementById("emiInput").value),ess=Number(document.getElementById("essentialInput").value),target=Number(document.getElementById("targetInput").value);
+    if([income,emi,ess,target].some(n=>!Number.isFinite(n)||n<0)){toast("Enter valid amounts");return;}
+    state.income=income;state.emi=emi;state.essentials=ess;state.target=target;persist();render();toast("Monthly plan updated");
+  });
+  const homeGrid=document.getElementById("homeGrid");
+  const welcomeSection=document.querySelector(".welcome");
+  const sectionLinks=document.querySelectorAll(".feature-nav a[data-view]");
+  function showArea(view){
+    const isHome=view==="home";
+    homeGrid.classList.toggle("hidden",!isHome);
+    welcomeSection.classList.toggle("hidden",!isHome);
+    document.querySelectorAll(".feature-section").forEach(section=>section.classList.toggle("active",section.id===view));
+    sectionLinks.forEach(link=>link.classList.toggle("active",link.dataset.view===view));
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  sectionLinks.forEach(link=>link.addEventListener("click",event=>{event.preventDefault();showArea(link.dataset.view);}));
+  document.getElementById("resetDemo").addEventListener("click",()=>{
+    if(confirm("Reset all local expenses, challenge marks and budget settings to the sample starting values?")){state=structuredClone(defaultState);persist();render();toast("Demo data reset");}
+  });
+  document.getElementById("noSpendingToday").addEventListener("click",()=>{
+    if(state.expenses.some(e=>e.date===isoToday)){toast("An expense is already logged for today.");return;}
+    state.dailySpending=state.dailySpending||{};state.dailySpending[isoToday]={status:"no-spending",updatedAt:new Date().toISOString()};state.challenge[isoToday]=true;persist();render();toast("No spending recorded for today");
+  });
+  document.getElementById("undoNoSpending").addEventListener("click",()=>{
+    if(state.dailySpending?.[isoToday]?.status==="no-spending"){delete state.dailySpending[isoToday];persist();render();toast("Today's spending status cleared");}
+    else toast("There is no no-spending status to undo");
+  });
+  document.getElementById("calculatePastMonth").addEventListener("click",()=>{
+    const month=document.getElementById("calcMonth").value;
+    const income=Number(document.getElementById("calcIncome").value);
+    const spent=Number(document.getElementById("calcSpent").value);
+    const savings=Number(document.getElementById("calcSavings").value);
+    if(!month||[income,spent,savings].some(n=>!Number.isFinite(n)||n<0)){toast("Enter a month and valid non-negative amounts.");return;}
+    const balance=income-spent-savings;
+    document.getElementById("pastMonthResult").textContent=month+" calculation: income "+money(income)+", spending "+money(spent)+", other savings "+money(savings)+". Remaining balance: "+money(balance)+". This is a separate calculation and does not alter daily records.";
+  });
+  const scientificModal=document.getElementById("scientificCalculatorModal"),scientificDisplay=document.getElementById("scientificDisplay"),scientificStatus=document.getElementById("scientificStatus");
+  let scientificExpression="",scientificMemory=0,scientificLastAnswer=0;
+  function openScientific(){scientificModal.classList.add("open");scientificDisplay.textContent=scientificExpression||"0";}
+  function closeScientific(){scientificModal.classList.remove("open");}
+  document.getElementById("openScientificCalculator").addEventListener("click",openScientific);
+  document.getElementById("closeScientificCalculator").addEventListener("click",closeScientific);
+  scientificModal.addEventListener("click",event=>{if(event.target===scientificModal)closeScientific();});
+  function appendScientific(value){if(scientificDisplay.textContent.startsWith("Error")){scientificExpression="";}scientificExpression+=value;scientificDisplay.textContent=scientificExpression||"0";}
+  function calculateScientific(){
+    try{
+      let expression=scientificExpression.replace(/\s+/g,"").replace(/π/g,"pi").replace(/×/g,"*").replace(/÷/g,"/");
+      if(!expression)throw new Error("Enter an expression first.");
+      if(!/^[0-9.+\-*/%^(),a-zA-Z]+$/.test(expression))throw new Error("Expression contains unsupported characters.");
+      const mode=document.getElementById("angleMode").value,rad=x=>mode==="DEG"?x*Math.PI/180:x,fromRad=x=>mode==="DEG"?x*180/Math.PI:x;
+      expression=expression.replace(/pi/g,"Math.PI").replace(/\be\b/g,"Math.E").replace(/\bsqrt\(/g,"Math.sqrt(").replace(/\bsin\(/g,"Math.sin(rad(").replace(/\bcos\(/g,"Math.cos(rad(").replace(/\btan\(/g,"Math.tan(rad(").replace(/\basin\(/g,"fromRad(Math.asin(").replace(/\bacos\(/g,"fromRad(Math.acos(").replace(/\batan\(/g,"fromRad(Math.atan(").replace(/\blog\(/g,"Math.log10(").replace(/\bln\(/g,"Math.log(").replace(/\^/g,"**");
+      expression=expression.replace(/(\d+(?:\.\d+)?|Math\.PI|Math\.E|\([^()]*\))!/g,"factorial($1)").replace(/(\d+(?:\.\d+)?)%/g,"($1/100)");
+      const factorial=n=>{if(!Number.isInteger(n)||n<0||n>170)throw new Error("Factorial needs a whole number from 0 to 170.");let out=1;for(let i=2;i<=n;i++)out*=i;return out;};
+      if(!/^[0-9.MathPIE()+\-*/%,a-zA-Z_]+$/.test(expression))throw new Error("Invalid expression.");
+      const result=Function("rad","fromRad","factorial","return ("+expression+")")(rad,fromRad,factorial);
+      if(typeof result!=="number"||!Number.isFinite(result))throw new Error("Result is not a finite number.");
+      scientificLastAnswer=result;scientificDisplay.textContent=Number(result.toPrecision(12)).toString();scientificStatus.textContent="Calculated successfully.";scientificExpression=String(Number(result.toPrecision(12)));
+    }catch(error){scientificDisplay.textContent="Error";scientificStatus.textContent=error.message||"Could not calculate this expression.";}
+  }
+  document.getElementById("scientificKeypad").addEventListener("click",event=>{
+    const key=event.target.closest("button[data-value],button[data-action]");if(!key)return;
+    const action=key.dataset.action,value=key.dataset.value;
+    if(value!==undefined){appendScientific(value);return;}
+    if(action==="clear"){scientificExpression="";scientificDisplay.textContent="0";scientificStatus.textContent="Cleared.";}
+    else if(action==="backspace"){scientificExpression=scientificExpression.slice(0,-1);scientificDisplay.textContent=scientificExpression||"0";}
+    else if(action==="equals")calculateScientific();
+    else if(action==="memory-add"){scientificMemory=scientificLastAnswer||Number(scientificDisplay.textContent)||0;scientificStatus.textContent="Memory stored: "+scientificMemory;}
+    else if(action==="memory-recall")appendScientific(String(scientificMemory));
+    else if(action==="memory-clear"){scientificMemory=0;scientificStatus.textContent="Memory cleared.";}
+    else if(action==="sign"){if(scientificExpression)scientificExpression="(-1)*("+scientificExpression+")";else scientificExpression="-";scientificDisplay.textContent=scientificExpression;}
+  });
+  document.addEventListener("keydown",event=>{if(!scientificModal.classList.contains("open"))return;if(/^[0-9.+\-*/%^()]$/.test(event.key)){appendScientific(event.key);}else if(event.key==="Enter"){event.preventDefault();calculateScientific();}else if(event.key==="Backspace"){scientificExpression=scientificExpression.slice(0,-1);scientificDisplay.textContent=scientificExpression||"0";}else if(event.key==="Escape"){closeScientific();}});
+  const themeSelect=document.getElementById("themeSelect");
+  const fontSelect=document.getElementById("fontSelect");
+  const fontColorSelect=document.getElementById("fontColorSelect");
+  const accentColorSelect=document.getElementById("accentColorSelect");
+  const languageSelect=document.getElementById("languageSelect");
+  function setTheme(theme){const chosen=theme==="light"?"light":"dark";document.documentElement.dataset.theme=chosen;themeSelect.value=chosen;try{localStorage.setItem("gp_money_theme",chosen);}catch(e){}}
+  function setFont(font){const chosen=["classic","modern","rounded"].includes(font)?font:"modern";document.documentElement.dataset.font=chosen;fontSelect.value=chosen;try{localStorage.setItem("gp_money_font",chosen);}catch(e){}}
+  function setCustomColor(variable,color,fallback,key){const safe=/^#[0-9a-fA-F]{6}$/.test(color)?color:fallback;document.documentElement.style.setProperty(variable,safe);try{localStorage.setItem(key,safe);}catch(e){}}
+  try{setTheme(localStorage.getItem("gp_money_theme")||"dark");setFont(localStorage.getItem("gp_money_font")||"modern");const savedText=localStorage.getItem("gp_money_font_color")||"#f8f0cf";fontColorSelect.value=savedText;setCustomColor("--font-color",savedText,"#f8f0cf","gp_money_font_color");const savedAccent=localStorage.getItem("gp_money_accent_color")||"#d6a832";accentColorSelect.value=savedAccent;setCustomColor("--accent-color",savedAccent,"#d6a832","gp_money_accent_color");languageSelect.value=localStorage.getItem("gp_money_language")||"en";}catch(e){setTheme("dark");setFont("modern");}
+  themeSelect.addEventListener("change",()=>{setTheme(themeSelect.value);toast("Appearance updated");});
+  document.getElementById("quickThemeToggle").addEventListener("click",()=>{setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");toast("Theme switched");});
+  fontSelect.addEventListener("change",()=>{setFont(fontSelect.value);toast("Font style updated");});
+  fontColorSelect.addEventListener("input",()=>{setCustomColor("--font-color",fontColorSelect.value,"#f8f0cf","gp_money_font_color");});
+  accentColorSelect.addEventListener("input",()=>{setCustomColor("--accent-color",accentColorSelect.value,"#d6a832","gp_money_accent_color");});
+  document.getElementById("resetAppearance").addEventListener("click",()=>{setTheme("dark");setFont("modern");fontColorSelect.value="#f8f0cf";accentColorSelect.value="#d6a832";setCustomColor("--font-color","#f8f0cf","#f8f0cf","gp_money_font_color");setCustomColor("--accent-color","#d6a832","#d6a832","gp_money_accent_color");toast("Appearance reset");});
+  const translations={en:{home:"Home",plans:"Plans & Purchase",assistant:"AI Assistant",settings:"User Settings",help:"Help & Support"},ta:{home:"முகப்பு",plans:"திட்டங்கள் & வாங்குதல்",assistant:"AI உதவியாளர்",settings:"பயனர் அமைப்புகள்",help:"உதவி & ஆதரவு"},hi:{home:"होम",plans:"प्लान और खरीद",assistant:"AI सहायक",settings:"उपयोगकर्ता सेटिंग्स",help:"सहायता"},fr:{home:"Accueil",plans:"Offres et achat",assistant:"Assistant IA",settings:"Paramètres",help:"Aide et support"},es:{home:"Inicio",plans:"Planes y compra",assistant:"Asistente IA",settings:"Configuración",help:"Ayuda y soporte"}};
+  languageSelect.addEventListener("change",()=>{const lang=languageSelect.value;try{localStorage.setItem("gp_money_language",lang);}catch(e){}const words=translations[lang]||translations.en;const links=document.querySelectorAll(".feature-nav a");[words.home,words.plans,words.assistant,words.settings,words.help].forEach((label,i)=>{if(links[i])links[i].textContent=label;});toast("Navigation language updated");});
+  document.querySelectorAll(".choose-plan").forEach(button=>button.addEventListener("click",()=>{document.getElementById("planStatus").textContent="Selected for preview: "+button.dataset.plan+". No payment was taken and no subscription was activated.";toast("Plan preview selected");}));
+  function addChatMessage(message,who){const item=document.createElement("div");item.className="chat-message"+(who==="user"?" user":"");item.textContent=message;document.getElementById("chatLog").appendChild(item);document.getElementById("chatLog").scrollTop=document.getElementById("chatLog").scrollHeight;}
+  function assistantReply(question){const q=question.toLowerCase();const available=state.income-state.emi-state.essentials; if(q.includes("save")||q.includes("saving")||q.includes("சேம")){return "Your planned monthly surplus before unplanned spending is "+money(available)+". Try setting aside a realistic amount after essentials and EMI, then record actual savings separately. This is a simple demo estimate.";}if(q.includes("spend")||q.includes("expense")||q.includes("செல")){return "Tracked expenses this month total "+money(total(monthExpenses()))+". Check the category breakdown and add any missing purchases for a more useful picture.";}if(q.includes("emi")||q.includes("loan")||q.includes("கடன்")){return "Your entered EMI is "+money(state.emi)+" per month. Confirm loan balance, interest rate and due date with your lender; this demo does not calculate your actual outstanding loan.";}if(q.includes("budget")||q.includes("plan")){return "Monthly income: "+money(state.income)+". EMI: "+money(state.emi)+". Essential costs: "+money(state.essentials)+". Planned surplus before unplanned expenses: "+money(available)+". Keep a buffer for irregular bills.";}return "I can offer basic demo guidance about saving, spending, EMI or your budget. Try one of those topics. For personalized live AI assistance, a secure AI service must be connected.";}
+  document.getElementById("chatForm").addEventListener("submit",event=>{event.preventDefault();const input=document.getElementById("chatInput");const question=input.value.trim();if(!question)return;addChatMessage(question,"user");const answer=assistantReply(question);addChatMessage(answer);input.value="";if(window.speechSynthesis&&document.getElementById("voiceAutoSpeak")?.checked){const utterance=new SpeechSynthesisUtterance(answer);utterance.lang=document.getElementById("voiceLanguage").value;window.speechSynthesis.cancel();window.speechSynthesis.speak(utterance);}});
+  document.getElementById("editProfile").addEventListener("click",()=>{let profile={};try{profile=JSON.parse(sessionStorage.getItem(DEMO_SESSION_KEY)||"{}");}catch(e){}document.getElementById("profileStatus").textContent=profile.email?((profile.name?profile.name+" · ":"")+profile.email):"Demo profile on this device; no verified account";toast("Profile details shown when available");});
+  document.getElementById("privacyInfo").addEventListener("click",()=>alert("This prototype stores budget and expense data in browser localStorage. Clear browser site data to remove it. Do not enter bank credentials, real passwords or highly sensitive financial information. Cloud sync and secure multi-user isolation are not implemented."));
+  document.getElementById("speakHelp").addEventListener("click",()=>{const text="Welcome to GP Money Saving Partner. Set a monthly plan, record your expenses, and choose a realistic savings goal.";if(!( "speechSynthesis" in window)){document.getElementById("voiceStatus").textContent="Speech output is not supported in this browser.";return;}const utterance=new SpeechSynthesisUtterance(text);utterance.lang=document.getElementById("voiceLanguage").value;window.speechSynthesis.cancel();window.speechSynthesis.speak(utterance);document.getElementById("voiceStatus").textContent="Reading a sample aloud. Available voices depend on your device.";});
+  document.getElementById("startVoice").addEventListener("click",()=>{const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;if(!Recognition){document.getElementById("voiceStatus").textContent="Speech recognition is not supported in this browser. Try a supported browser or use the chat assistant.";return;}const recognition=new Recognition();recognition.lang=document.getElementById("voiceLanguage").value;recognition.interimResults=false;recognition.maxAlternatives=1;document.getElementById("voiceStatus").textContent="Listening… please allow microphone access if prompted.";recognition.onresult=event=>{const heard=event.results[0][0].transcript;document.getElementById("voiceStatus").textContent="Heard: "+heard;addChatMessage(heard,"user");const answer=assistantReply(heard);addChatMessage(answer);if("speechSynthesis" in window){const utterance=new SpeechSynthesisUtterance(answer);utterance.lang=recognition.lang;window.speechSynthesis.speak(utterance);}};recognition.onerror=event=>{document.getElementById("voiceStatus").textContent="Voice input issue: "+event.error+". You can still type in the AI chat.";};recognition.onend=()=>{};try{recognition.start();}catch(e){document.getElementById("voiceStatus").textContent="Could not start voice input. Check microphone permission and try again.";}});
+  recordLoginAttendance();
+  state.challenge=state.challenge||{};
+  if((state.expenses.some(e=>e.date===isoToday)||state.dailySpending?.[isoToday]?.status==="no-spending")&&snackToday()<=state.snackLimit)state.challenge[isoToday]=true;
+  document.getElementById("calcMonth").value=isoToday.slice(0,7);
+  render();
+})();
+</script>
+</body>
+</html>
